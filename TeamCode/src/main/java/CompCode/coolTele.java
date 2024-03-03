@@ -179,6 +179,7 @@ public class coolTele extends LinearOpMode {
         robot.raxon.setPosition(.665);
         robot.laxon.setPosition(.335);
         robot.bendwrist.setPosition(.1535);
+        robot.drone.setPosition(.5);
 
         waitForStart();
 
@@ -549,7 +550,9 @@ public class coolTele extends LinearOpMode {
                 }else {
                     robot.climb.setPower(0);
                 }
-
+            if(gamepad1.circle && gamepad1.triangle) {
+                robot.drone.setPosition(.8);
+            }
 
                telemetry.addData("rotate#:",rotate_pos);
             telemetry.addData("intake#:",intakepos);

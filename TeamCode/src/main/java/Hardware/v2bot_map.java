@@ -107,7 +107,7 @@ public class v2bot_map {
         leftBack = hwMap.get(DcMotorEx.class, "perpendicularEncoder");
         rightBack = hwMap.get(DcMotorEx.class, "rb");
         rightFront = hwMap.get(DcMotorEx.class, "rf");
-        //drone = hwMap.get(Servo.class, "release");
+        drone = hwMap.get(Servo.class, "drone");
         climb = hwMap.get(DcMotor.class, "climb");
         intake = hwMap.get(DcMotorEx.class, "intake"); //intake spin
         drop = hwMap.get(Servo.class, "drop"); //intake move up and down

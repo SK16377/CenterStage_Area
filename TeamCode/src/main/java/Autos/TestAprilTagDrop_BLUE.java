@@ -19,12 +19,13 @@ import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibra
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.VisionProcessor;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.opencv.core.Mat;
 import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
 
+
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import Hardware.CenterstageDetector;
@@ -46,7 +47,7 @@ public class TestAprilTagDrop_BLUE extends LinearOpMode {
      * The variable to store our instance of the AprilTag processor.
      */
     private AprilTagProcessor aprilTag;
-  //  private CenterstageProcessor detector;
+    //private CenterstageProcessor detector;
 
     /**
      * The variable to store our instance of the vision portal.
@@ -66,129 +67,31 @@ public class TestAprilTagDrop_BLUE extends LinearOpMode {
 //        lift = new Lift(hardwareMap, telemetry);
 //        arm = new Arm(hardwareMap, telemetry);
 
-        initAprilTag(telemetry);
-
+        initAprilTag();
+       // visionPortal.resumeStreaming();
         Pose2d startPose = new Pose2d(16.62, 63.42, Math.toRadians(270.00));
         drive.setPoseEstimate(startPose);
-        Trajectory left = drive.trajectoryBuilder(startPose)
-                .splineTo(new Vector2d(21.8, 43.81), Math.toRadians(270.00))
-                .build();
 
-        Trajectory middle = drive.trajectoryBuilder(startPose)
-                .splineTo(new Vector2d(13.22, 38.31), Math.toRadians(270.00))
-                .build();
-
-
-        Trajectory right = drive.trajectoryBuilder(startPose)
-                .splineTo(new Vector2d(7.93, 39.13), Math.toRadians(230.00))
-                .build();
-
-
-        Trajectory backup_middle = drive.trajectoryBuilder(middle.end())
-                .back(2)
-                .build();
-        Trajectory drop_middle = drive.trajectoryBuilder(backup_middle.end())
-                .lineToLinearHeading(new Pose2d(44.7, 36.75, Math.toRadians(0.00)))
-                .build();
-        Trajectory deposit_middle = drive.trajectoryBuilder(drop_middle.end())
-                .forward(6.5)
-                .build();
-        Trajectory away_middle = drive.trajectoryBuilder(deposit_middle.end())
-                .back(4.5)
-                .build();
-        Trajectory middle_park = drive.trajectoryBuilder(away_middle.end())
-                .strafeLeft(22)
-                .build();
-        Trajectory backup_left = drive.trajectoryBuilder(left.end())
-                .back(3)
-                .build();
-
-        Trajectory left_drop = drive.trajectoryBuilder(backup_left.end())
-                .lineToLinearHeading(new Pose2d(43.24, 44.09, Math.toRadians(0.00)))
-                .build();
-        Trajectory deposit_left = drive.trajectoryBuilder(left_drop.end())
-                .forward(5.7)
-                .build();
-        Trajectory away_left = drive.trajectoryBuilder(deposit_left.end())
-                .back(4.5)
-                .build();
-        Trajectory left_park = drive.trajectoryBuilder(away_left.end())
-                .strafeLeft(15)
-                .build();
-
-        Trajectory backup_right = drive.trajectoryBuilder(left.end())
-                .back(5)
-                .build();
-        Trajectory right_drop = drive.trajectoryBuilder(backup_left.end())
-                .lineToLinearHeading(new Pose2d(44.24, 31, Math.toRadians(0.00)))
-                .build();
-
-        Trajectory deposit_right = drive.trajectoryBuilder(right_drop.end())
-                .forward(7.3)
-                .build();
-        Trajectory away_right = drive.trajectoryBuilder(deposit_right.end())
-                .back(2.5)
-                .build();
-        Trajectory right_park = drive.trajectoryBuilder(away_right.end())
-                .strafeLeft(30)
-                .build();
-
+        telemetryAprilTag();
         waitForStart();
         if (isStopRequested()) return;
        // CenterstageProcessor.Location location = detector.getLocation();
 
 //        visionPortal.setProcessorEnabled(detector, false);
-        visionPortal.setProcessorEnabled(aprilTag, true);
+
         setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
-
-//        switch (location) {
-//            case LEFT: //left
-//                drive.followTrajectory(left);
-//                drive.followTrajectory(backup_left);
-//                drive.followTrajectory(left_drop);
-//                scoreLow(deposit_left, away_left);
-//                drive.followTrajectory(left_park);
+        //sleep(10000);
 //
-//                //drive.followTrajectory(left_park);
-//                break;
-//            case NOT_FOUND: //right
-//                drive.followTrajectory(right);
-//                drive.followTrajectory(backup_right);
-//                drive.followTrajectory(right_drop);
-//                scoreLow(deposit_right, away_right);
-//                drive.followTrajectory(right_park);
-//                break;
-//            case RIGHT: //middle
-//                drive.followTrajectory(middle);
-//                drive.followTrajectory(backup_middle);
-//                drive.followTrajectory(drop_middle);
-//                scoreLow(deposit_middle, away_middle);
-//                drive.followTrajectory(middle_park);
-//                break;
-//        }
-//
-
 
 
 
     }
-//    public void scoreLow(Trajectory backdrop, Trajectory away){
-//
-//        arm.goToScoringPos();
-//        lift.moveToTarget(Lift.LiftPos.LOW_AUTO);
-//
-//        drive.followTrajectory(backdrop);
-//        arm.deposit(1);
-//        drive.followTrajectory(away);
-//        arm.intakePos();
-//        lift.moveToTarget(Lift.LiftPos.START);
-//
-//    }
+//    p
 
     /**
      * Initialize the AprilTag processor.
      */
-    private void initAprilTag(Telemetry telemetry) {
+    private void initAprilTag() {
 
         // Create the AprilTag processor.
         aprilTag = new AprilTagProcessor.Builder()
@@ -207,7 +110,7 @@ public class TestAprilTagDrop_BLUE extends LinearOpMode {
                 .setLensIntrinsics(622.001, 622.001, 319.803, 241.251)
                 // ... these parameters are fx, fy, cx, cy.
                 .build();
-       // detector = new CenterstageProcessor(telemetry);
+        //detector = new CenterstageProcessor(telemetry);
         // Adjust Image Decimation to trade-off detection-range for detection-rate.
         // eg: Some typical detection data using a Logitech C920 WebCam
         // Decimation = 1 ..  Detect 2" Tag from 10 feet away at 10 Frames per second
@@ -239,10 +142,10 @@ public class TestAprilTagDrop_BLUE extends LinearOpMode {
         //builder.setAutoStopLiveView(false);
 
         // Set and enable the processor.
-      //  builder.addProcessors(aprilTag, detector);
+        builder.addProcessors(aprilTag);
 
         // Build the Vision Portal, using the above settings.
-      //  visionPortal = builder.build();
+        visionPortal = builder.build();
 
         visionPortal.setProcessorEnabled(aprilTag, true);
        // visionPortal.setProcessorEnabled(detector, false);
@@ -288,6 +191,30 @@ public class TestAprilTagDrop_BLUE extends LinearOpMode {
             sleep(20);
         }
     }
+    private void telemetryAprilTag() {
+
+        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+        telemetry.addData("# AprilTags Detected", currentDetections.size());
+
+        // Step through the list of detections and display info for each one.
+        for (AprilTagDetection detection : currentDetections) {
+            if (detection.metadata != null) {
+                telemetry.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
+                telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
+                telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw));
+                telemetry.addLine(String.format("RBE %6.1f %6.1f %6.1f  (inch, deg, deg)", detection.ftcPose.range, detection.ftcPose.bearing, detection.ftcPose.elevation));
+            } else {
+                telemetry.addLine(String.format("\n==== (ID %d) Unknown", detection.id));
+                telemetry.addLine(String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));
+            }
+        }   // end for() loop
+
+        // Add "key" information to telemetry
+        telemetry.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
+        telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
+        telemetry.addLine("RBE = Range, Bearing & Elevation");
+
+    }   // end method telemetryAprilTag()
 }
 
 
