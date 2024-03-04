@@ -72,6 +72,8 @@ public class v2bot_map {
     public Servo raxon;
     public Servo wrist;
     public Servo laxon;
+    public Servo lflap;
+    public Servo rflap;
 
 
     public Servo rearclaw;
@@ -119,6 +121,8 @@ public class v2bot_map {
         laxon = hwMap.get(Servo.class, "laxon");
         raxon = hwMap.get(Servo.class, "raxon");
         raxon = hwMap.get(Servo.class, "raxon");
+        lflap = hwMap.get(Servo.class, "lflap");
+        rflap = hwMap.get(Servo.class, "rflap");
 
 //        webcam = hwMap.get(WebcamName.class, "Webcam 1");
 

@@ -431,17 +431,29 @@ public class coolTele extends LinearOpMode {
 
             }
             if (intakepos == 4 ) {
-                drop_pos = .4675;
+                drop_pos = .15;
             }
             if (intakepos == 3 ) {
-               drop_pos = .4695;
+               drop_pos = .4;
             }
             if (intakepos == 2 ) {
-               drop_pos = .472;
+               drop_pos = .6;
             }
             if (intakepos == 1) {
-                drop_pos = .5;
+                drop_pos = .8;
             }
+//            if (intakepos == 4 ) {
+//                drop_pos = .5;
+//            }
+//            if (intakepos == 3 ) {
+//                drop_pos = .4;
+//            }
+//            if (intakepos == 2 ) {
+//                drop_pos = .472;
+//            }
+//            if (intakepos == 1) {
+//                drop_pos = .5;
+//            }
 
             if (gamepad1.right_trigger > 0) { //out
                 robot.intake.setPower(-3);
