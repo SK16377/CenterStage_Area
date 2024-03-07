@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -71,6 +72,11 @@ public class Drop_RED extends LinearOpMode {
         Trajectory left = drive.trajectoryBuilder(startPose)
                 .splineTo(new Vector2d(8.93, -39.13), Math.toRadians(140.00))
                 .build();
+
+//        TrajectorySequence untitled0 = drive.trajectorySequenceBuilder(new Pose2d(16.79, -64.32, Math.toRadians(90.00)))
+//                .splineTo(new Vector2d(29.66, -39.84), Math.toRadians(90.00))
+//                .splineTo(new Vector2d(58.42, -9.83), Math.toRadians(90.00))
+//                .build();
 
 
         Trajectory backup_middle = drive.trajectoryBuilder(middle.end())
