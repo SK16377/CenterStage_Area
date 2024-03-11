@@ -10,11 +10,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import java.util.Locale;
 
+import Hardware.Intake;
+import Hardware.v2bot_map;
+
 //TODO:
-// REV sensors can detect color and distance.
-// Will the pixels be directly on top of the sensor?
-// Can we use that to detect the pixels instead of specific colors?
-// Do we want to use this sensor data to trigger other parts of the robot?
+// REV sensors can detect color and distance
+// Do we want to use this sensor data to trigger other parts of the robot? Yes
+// Intake, if pixel detected, stop intake, short slow outake, stop again, program continues
 
 @TeleOp(name = "intake_pixel", group = "Sensor")
 //@Disabled
@@ -24,8 +26,8 @@ public class SensorColor extends LinearOpMode {
     DistanceSensor sensorDistance;
     double waitTime1 = 1;
 
-
     ElapsedTime waitTimer1 = new ElapsedTime();
+    Intake intake;
     double factor = 255;
 
     @Override
@@ -45,6 +47,20 @@ public class SensorColor extends LinearOpMode {
 
         // loop and read the RGB and distance data.
         while (opModeIsActive()) {
+
+          //INTAKE ROLLER SEQUENCE TEST
+
+
+            if (sensorDistance.getDistance(DistanceUnit.CM) > .1 && sensorDistance.getDistance(DistanceUnit.CM) < 1.9 && waitTimer1.seconds() >= waitTime1){
+                intake.stopintake();
+                intake.outtake(1);
+                intake.stopintake();
+            } else {
+                intake.intake(5);
+            }
+
+            
+
             // convert the RGB values to HSV values.
             // multiply by the SCALE_FACTOR.
             // then cast it back to int (SCALE_FACTOR is a double)
@@ -93,6 +109,5 @@ public class SensorColor extends LinearOpMode {
             telemetry.update();
         }
 
-//
     }
 }
